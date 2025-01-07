@@ -8,10 +8,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 import programmerzamannow.restful.entity.User;
 import programmerzamannow.restful.model.RegisterUserRequest;
+import programmerzamannow.restful.model.UpdateUserRequest;
 import programmerzamannow.restful.model.UserResponse;
 import programmerzamannow.restful.model.WebResponse;
 import programmerzamannow.restful.service.UserService;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 
@@ -39,6 +41,17 @@ public class UserController {
     
     public WebResponse<UserResponse> get(User user){
         UserResponse userResponse = UserService.get(user);
+        return WebResponse.<UserResponse>builder().data(userResponse).build();
+    }
+
+    @PatchMapping(
+        path = "/api/users/current",
+        consumes = MediaType.APPLICATION_JSON_VALUE,
+        produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    
+    public WebResponse<UserResponse> update(User user, @RequestBody UpdateUserRequest request){
+        UserResponse userResponse = UserService.update(user, request);
         return WebResponse.<UserResponse>builder().data(userResponse).build();
     }
 

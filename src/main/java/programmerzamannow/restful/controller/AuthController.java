@@ -9,7 +9,10 @@ import programmerzamannow.restful.model.LoginUserRequest;
 import programmerzamannow.restful.model.TokenResponse;
 import programmerzamannow.restful.model.WebResponse;
 import programmerzamannow.restful.service.AuthService;
+
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import programmerzamannow.restful.entity.User;
 
 
 @RestController
@@ -28,6 +31,16 @@ public class AuthController {
     private WebResponse<TokenResponse> login(@RequestBody LoginUserRequest request){
         TokenResponse tokenResponse = authService.login(request);
         return WebResponse.<TokenResponse>builder().data(tokenResponse).build();
+    }
+
+    @DeleteMapping(
+        path = "/api/auth/logout",
+        produces = MediaType.APPLICATION_JSON_VALUE
+        )
+
+    public WebResponse<String> logout(User user) {
+        authService.logout(user);
+        return WebResponse.<String>builder().data("OK").build();
     }
 
 }

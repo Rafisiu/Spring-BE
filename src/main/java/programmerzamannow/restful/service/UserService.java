@@ -1,5 +1,6 @@
 package programmerzamannow.restful.service;
 
+import java.util.Objects;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,7 @@ import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Validator;
 import programmerzamannow.restful.entity.User;
 import programmerzamannow.restful.model.RegisterUserRequest;
+import programmerzamannow.restful.model.UpdateUserRequest;
 import programmerzamannow.restful.model.UserResponse;
 import programmerzamannow.restful.repository.UserRepository;
 import programmerzamannow.restful.security.BCrypt;
@@ -48,6 +50,26 @@ public class UserService {
         return UserResponse.builder()
                 .username(user.getUsername())
                 .name(user.getName())
+                .build();
+    }
+
+    @Transactional
+    public UserResponse update(User user, UpdateUserRequest request) {
+        validationService.validate(request);
+
+        if (Objects.nonNull(request.getName())) {
+            user.setName(request.getName());
+        }
+
+        if (Objects.nonNull(request.getPassword())) {
+            user.setPassword(BCrypt.hashpw(request.getPassword(), BCrypt.gensalt()));
+        }
+
+        userRepository.save(user);
+
+        return UserResponse.builder()
+                .name(user.getName())
+                .username(user.getUsername())
                 .build();
     }
 
