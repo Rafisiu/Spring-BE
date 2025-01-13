@@ -108,11 +108,11 @@ public class ContactService {
             }
 
             if(Objects.nonNull(request.getEmail())){
-                predicates.add(builder.like(root.get("email"), "%" + request.getEmail()));
+                predicates.add(builder.like(root.get("email"), "%" + request.getEmail() + "%"));
             }
 
             if(Objects.nonNull(request.getPhone())){
-                predicates.add(builder.like(root.get("phone"), "%" + request.getPhone()));
+                predicates.add(builder.like(root.get("phone"), "%" + request.getPhone() + "%"));
             }
 
             return query.where(predicates.toArray(new Predicate[]{})).getRestriction();
