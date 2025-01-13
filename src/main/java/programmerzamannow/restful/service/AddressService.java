@@ -1,5 +1,6 @@
 package programmerzamannow.restful.service;
 
+import java.util.List;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -103,5 +104,15 @@ public class AddressService {
 
         addressRepository.delete(address);
     }
+
+    @Transactional(readOnly = true)
+    public List<AddressResponse> list(User user, String contactId) {
+        Contact contact = contactRepository.findFirstByUserAndId(user, contactId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Contact not found"));
+
+        List<Address> addresses = addressRepository.findAllByContact(contact);
+        return addresses.stream().map(address -> toAddressResponse(address)).toList();
+    }
+
 
 }
